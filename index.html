@@ -1,117 +1,151 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - IndiLearn</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 40px;
-            max-width: 800px;
-            color: #333;
-        }
-        h1, h2 {
-            color: #222;
-        }
-        h1 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        p {
-            margin: 10px 0;
-        }
-        ul {
-            margin-left: 20px;
-        }
-        .section {
-            margin-top: 25px;
-        }
-        .footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Miuni - Product Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+    }
+
+    header {
+      background-color: #222;
+      color: white;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #searchBar {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    #productContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      width: 250px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      position: relative;
+    }
+
+    .product-content {
+      flex-grow: 1;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .product img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .product h2 {
+      font-size: 18px;
+      margin: 10px 0 5px;
+    }
+
+    .product p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .buy-button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .product-content:hover {
+      opacity: 0.95;
+    }
+  </style>
 </head>
 <body>
+  <header>Miuni</header>
 
-```
-<h1>Privacy Policy for IndiLearn</h1>
-<p><strong>Effective Date:</strong> May 1, 2026</p>
+  <input type="text" id="searchBar" placeholder="Search products...">
 
-<div class="section">
-    <p>IndiLearn ("we", "our", or "us") operates the mobile application <strong>IndiLearn</strong> (package name: com.indilearn.trace).</p>
-    <p>This Privacy Policy explains how we collect, use, and protect your information when you use our app.</p>
-</div>
+  <div id="productContainer"></div>
 
-<div class="section">
-    <h2>Information We Collect</h2>
+  <script>
+    let allProducts = [];
 
-    <h3>Personal Information</h3>
-    <p>We do not directly collect personal information such as your name, email address, or phone number unless you voluntarily provide it.</p>
+    function renderProducts(products) {
+      const container = document.getElementById('productContainer');
+      container.innerHTML = '';
 
-    <h3>Usage Data</h3>
-    <p>We may collect anonymous usage data such as:</p>
-    <ul>
-        <li>App interactions</li>
-        <li>Device type and OS version</li>
-        <li>Crash logs</li>
-    </ul>
-</div>
+      if (products.length === 0) {
+        container.innerHTML = '<p>No matching products found.</p>';
+        return;
+      }
 
-<div class="section">
-    <h2>Third-Party Services</h2>
-    <p>We use trusted third-party services that may collect information:</p>
-    <ul>
-        <li>Google Firebase Analytics</li>
-        <li>Google Play Services</li>
-    </ul>
-    <p>These services may collect device identifiers and usage statistics.</p>
-    <p>Learn more: <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></p>
-</div>
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product';
+        card.innerHTML = `
+          <a class="product-content" href="product.html?id=${p.id}">
+            <img src="${p.image}" alt="${p.name}">
+            <h2>${p.name}</h2>
+            <p>${p.description}</p>
+          </a>
+          <a href="${p.link}" class="buy-button" target="_blank">Buy Now</a>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-<div class="section">
-    <h2>In-App Purchases</h2>
-    <p>Our app may offer one-time purchases to unlock premium features.</p>
-    <p>All payments are processed securely via Google Play. We do not store your payment information.</p>
-</div>
+    fetch('products.json')
+      .then(res => res.json())
+      .then(data => {
+        allProducts = data;
+        renderProducts(allProducts);
+      })
+      .catch(error => {
+        console.error('Error loading products:', error);
+        document.body.innerHTML += `<p style="color:red;">Error loading products.json</p>`;
+      });
 
-<div class="section">
-    <h2>How We Use Information</h2>
-    <ul>
-        <li>Improve app performance</li>
-        <li>Fix bugs and crashes</li>
-        <li>Enhance user experience</li>
-    </ul>
-</div>
-
-<div class="section">
-    <h2>Data Security</h2>
-    <p>We take reasonable measures to protect your data, but no method of transmission is 100% secure.</p>
-</div>
-
-<div class="section">
-    <h2>Children’s Privacy</h2>
-    <p>Our app is not intended for children under 13. We do not knowingly collect personal data from children.</p>
-</div>
-
-<div class="section">
-    <h2>Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. Updates will be posted on this page.</p>
-</div>
-
-<div class="section">
-    <h2>Contact Us</h2>
-    <p>Email: <strong>shobithmerin@gmail.com</strong></p>
-</div>
-
-<div class="footer">
-    <p>By using our app, you agree to this Privacy Policy.</p>
-</div>
-```
-
+    document.getElementById('searchBar').addEventListener('input', function () {
+      const keyword = this.value.toLowerCase();
+      const filtered = allProducts.filter(p =>
+        p.name.toLowerCase().includes(keyword) ||
+        p.description.toLowerCase().includes(keyword)
+      );
+      renderProducts(filtered);
+    });
+  </script>
 </body>
 </html>
